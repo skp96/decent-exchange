@@ -1,22 +1,17 @@
 import './App.css'
-import { SearchBar } from './components/Search/SearchBar'
-import { Coin } from './components/interfaces';
+import { RecoilRoot } from 'recoil';
+import {Suspense} from 'react';
+import { Loading } from './components/Loading/Loading';
+import { HomeContainer } from './components/Home/HomeContainer';
 
-const coins: Coin[] = [
-            { id: "bitcoin", symbol: "btc", name: "Bitcoin" },
-            { id: "ethereum", symbol: "ethereum", name: "Ethereum" },
-            { id: "solana", symbol: "sol", name: "Solana" }
-        ];
 
 function App() {
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Hello World!</p>
-        <SearchBar coins={coins}/>
-      </header>
-    </div>
+    <RecoilRoot>
+      <Suspense fallback={<Loading />}>
+        <HomeContainer />
+      </Suspense>   
+    </RecoilRoot>
   )
 }
 

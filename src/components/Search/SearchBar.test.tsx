@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, within } from "@testing-library/react";
 import { Coin } from "../interfaces";
 import { SearchBar } from './SearchBar';
 
