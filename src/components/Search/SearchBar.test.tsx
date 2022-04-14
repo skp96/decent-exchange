@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { Coin } from "../interfaces";
 import { SearchBar } from './SearchBar';
-import userEvent from '@testing-library/user-event';
 
 const default_props = {
     coins: []
@@ -22,5 +21,27 @@ describe("SearchBar Component", () => {
         const searchIcon = getByTestId("SearchIcon");
 
         expect(searchIcon).toBeInTheDocument();
+    });
+
+    test("as a user searches for coins, the search bar filters for results by name", () => {
+        const coins: Coin[] = [
+            { id: "bitcoin", symbol: "btc", name: "Bitcoin" },
+            { id: "ethereum", symbol: "ethereum", name: "Ethereum" },
+            { id: "solana", symbol: "sol", name: "Solana" }
+        ];
+
+        const { getByTestId } = render(<SearchBar coins={coins} />);
+
+        const autoCompleteSearch = getByTestId('autocomplete-search');
+        const input = within(autoCompleteSearch).getByRole("combobox");
+
+        autoCompleteSearch.focus();
+
+        fireEvent.change(input, { target: { value: "bitcoi" } });
+        fireEvent.keyDown(autoCompleteSearch, { key: "ArrowDown" });
+        fireEvent.keyDown(autoCompleteSearch, { key: "Enter" });
+
+        
+        expect(input).toHaveValue("Bitcoin")
     });
 });

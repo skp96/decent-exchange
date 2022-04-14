@@ -4,8 +4,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import { Coin } from '../interfaces';
-import { useState } from 'react';
-
 
 export const SearchBar: React.FC<{ coins: Coin[]; }> = ({ coins }) => {
     return (
@@ -13,6 +11,7 @@ export const SearchBar: React.FC<{ coins: Coin[]; }> = ({ coins }) => {
             <Autocomplete
                 freeSolo={true}
                 id="coin-search"
+                data-testid="autocomplete-search"
                 options={coins}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
