@@ -1,14 +1,20 @@
 import { fireEvent, render, within } from "@testing-library/react";
+import { RecoilRoot } from 'recoil';
 import { Coin } from "../interfaces";
 import { SearchBar } from './SearchBar';
 
 const default_props = {
-    coins: []
-}
+    coins: [],
+};
 
 describe("SearchBar Component", () => {
     test("displays a search bar", () => {
-        const { getByPlaceholderText } = render(<SearchBar {...default_props} />);
+
+        const { getByPlaceholderText } = render(
+            <RecoilRoot>
+                <SearchBar {...default_props} />
+            </RecoilRoot>
+        );
         
         const searchBar = getByPlaceholderText("Search");
 
@@ -16,7 +22,11 @@ describe("SearchBar Component", () => {
     });
 
     test("displays a magnifying icon in the search bar", () => {
-        const { getByTestId } = render(<SearchBar {...default_props} />);
+        const { getByTestId } = render(
+            <RecoilRoot>
+                <SearchBar {...default_props} />
+            </RecoilRoot>
+        );
         
         const searchIcon = getByTestId("SearchIcon");
 
@@ -30,7 +40,11 @@ describe("SearchBar Component", () => {
             { id: "solana", symbol: "sol", name: "Solana" }
         ];
 
-        const { getByTestId } = render(<SearchBar coins={coins} />);
+        const { getByTestId } = render(
+            <RecoilRoot>
+                <SearchBar coins={coins} />
+            </RecoilRoot>
+        );
 
         const autoCompleteSearch = getByTestId('autocomplete-search');
         const input = within(autoCompleteSearch).getByRole("combobox");
@@ -42,6 +56,79 @@ describe("SearchBar Component", () => {
         fireEvent.keyDown(autoCompleteSearch, { key: "Enter" });
 
         
-        expect(input).toHaveValue("Bitcoin")
+        expect(input).toHaveValue("Bitcoin");
+    });
+
+    test("display error when user selects more than 10 coins", () => {
+        const coins: Coin[] = [
+            { id: "coin1", symbol: "coin1", name: "Coin1" },
+            { id: "coin2", symbol: "coin2", name: "Coin2" },
+            { id: "coin3", symbol: "coin3", name: "Coin3" },
+            { id: "coin4", symbol: "coin4", name: "Coin4" },
+            { id: "coin5", symbol: "coin5", name: "Coin5" },
+            { id: "coin6", symbol: "coin6", name: "Coin6" },
+            { id: "coin7", symbol: "coin7", name: "Coin7" },
+            { id: "coin8", symbol: "coin8", name: "Coin8" },
+            { id: "coin9", symbol: "coin9", name: "Coin9" },
+            { id: "coin10", symbol: "coin10", name: "Coin10" },
+            { id: "coin11", symbol: "coin11", name: "Coin11" },
+        ];
+
+        const { getByTestId, getByRole } = render(
+            <RecoilRoot>
+                <SearchBar coins={coins} />
+            </RecoilRoot>
+        );
+
+        const autoCompleteSearch = getByTestId("autocomplete-search");
+        const input = within(autoCompleteSearch).getByRole("combobox")
+
+        for (let i = 0; i < coins.length; i++) {
+            fireEvent.change(input, { target: { value: "coin" } });
+            for (let j = 0; j <= i; j++) {
+                fireEvent.keyDown(autoCompleteSearch, { key: "ArrowDown" });
+            }
+            fireEvent.keyDown(autoCompleteSearch, { key: "Enter" });
+            fireEvent.change(input, { target: { value: "" } });
+        };
+
+        const errorMessage = getByRole("combobox", {description: "You can only select 10 coins. Please remove a coin to select another."});
+        expect(errorMessage).toBeInTheDocument();
+    });
+
+    test("input text field is disabled when user has selected 10 coins", () => {
+        const coins: Coin[] = [
+            { id: "coin1", symbol: "coin1", name: "Coin1" },
+            { id: "coin2", symbol: "coin2", name: "Coin2" },
+            { id: "coin3", symbol: "coin3", name: "Coin3" },
+            { id: "coin4", symbol: "coin4", name: "Coin4" },
+            { id: "coin5", symbol: "coin5", name: "Coin5" },
+            { id: "coin6", symbol: "coin6", name: "Coin6" },
+            { id: "coin7", symbol: "coin7", name: "Coin7" },
+            { id: "coin8", symbol: "coin8", name: "Coin8" },
+            { id: "coin9", symbol: "coin9", name: "Coin9" },
+            { id: "coin10", symbol: "coin10", name: "Coin10" },
+            { id: "coin11", symbol: "coin11", name: "Coin11" },
+        ];
+        
+        const { getByTestId } = render(
+            <RecoilRoot>
+                <SearchBar coins={coins} />
+            </RecoilRoot>
+        );
+
+        const autoCompleteSearch = getByTestId("autocomplete-search");
+        const input = within(autoCompleteSearch).getByRole("combobox");
+
+        for (let i = 0; i < coins.length; i++) {
+            fireEvent.change(input, { target: { value: "coin" } });
+            for (let j = 0; j <= i; j++) {
+                fireEvent.keyDown(autoCompleteSearch, { key: "ArrowDown" });
+            }
+            fireEvent.keyDown(autoCompleteSearch, { key: "Enter" });
+            fireEvent.change(input, { target: { value: "" } });
+        };
+
+        expect(input).toBeDisabled()
     });
 });

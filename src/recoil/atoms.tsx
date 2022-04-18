@@ -5,3 +5,8 @@ export const coinListState = atom<Coin[]>({
     key: "CoinList",
     default: []
 });
+
+export const selectedCoinsState = atom<Coin[]>({
+    key: "SelectedCoins",
+    default: []
+});
