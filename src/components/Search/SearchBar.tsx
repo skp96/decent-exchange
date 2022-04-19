@@ -21,6 +21,12 @@ export const SearchBar: React.FC<{ coins: Coin[]; }>  = ({ coins }) => {
         };
     }, [coins]);
 
+    useEffect(() => {
+        if (isError) {
+            setIsError(false);
+        };
+    }, [coinsList]);
+
     const updateSelectedCoins = (event: React.BaseSyntheticEvent, value: Coin | string | null) => {
         const maxCoins = 10;
         

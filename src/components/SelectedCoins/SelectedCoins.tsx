@@ -17,9 +17,8 @@ export const SelectedCoins = () => {
         ]);
 
         setCoinsListState((coinList) => [
-            ...coinList.slice(0, idx),
-            selectedCoin,
-            ...coinList.slice(idx + 1)
+            ...coinList,
+            selectedCoin
         ]);
     };
 
@@ -27,7 +26,7 @@ export const SelectedCoins = () => {
         <>
             <h2>Currently Selected Crypto Coins</h2>
             <p>Select a coin to remove it.</p>
-            <Grid data-testid="coin-grid" container>
+            <Grid data-testid="coin-grid" container spacing={1}>
                 {selectedCoins.map((coin, idx) => (
                     <Grid item key={idx}>
                         <CustomButton colornumber={idx} onClick={() => removeSelectedCoin(idx)}>{coin.name}</CustomButton>
