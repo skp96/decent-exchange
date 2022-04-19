@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
+
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,7 +10,7 @@ import { useRecoilState } from 'recoil';
 import { selectedCoinsState } from '../../recoil/atoms';
 import { coinListState } from "../../recoil/atoms";
 
-export const SearchBar: React.FC<{ coins: Coin[]; }> = ({ coins }) => {
+export const SearchBar: React.FC<{ coins: Coin[]; }>  = ({ coins }) => {
     const [coinsList, setCoinsListState] = useRecoilState(coinListState);
     const [selectedCoins, setSelectedCoins] = useRecoilState(selectedCoinsState)
     const [isError, setIsError] = useState(false);
