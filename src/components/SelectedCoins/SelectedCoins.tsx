@@ -9,9 +9,17 @@ export const SelectedCoins = () => {
     const [selectedCoins, setSelectedCoins] = useRecoilState(selectedCoinsState);
 
     const removeSelectedCoin = (idx: number) => {
+        const selectedCoin = selectedCoins[idx];
+
         setSelectedCoins((selectedCoins) => [
             ...selectedCoins.slice(0, idx),
             ...selectedCoins.slice(idx + 1)
+        ]);
+
+        setCoinsListState((coinList) => [
+            ...coinList.slice(0, idx),
+            selectedCoin,
+            ...coinList.slice(idx + 1)
         ]);
     };
 
