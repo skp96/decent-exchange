@@ -45,34 +45,32 @@ export const SearchBar: React.FC<{ coins: Coin[]; }> = ({ coins }) => {
     };
 
     return (
-        <Stack spacing={2} sx={{ width: 300 }} >
-            <Autocomplete
-                freeSolo={true}
-                id="coin-search"
-                data-testid="autocomplete-search"
-                options={coinsList}
-                getOptionLabel={(option) => option.name as string}
-                onChange={updateSelectedCoins}
-                disabled={isError}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        error={isError}
-                        helperText={isError ? "You can only select 10 coins. Please remove a coin to select another." : ""}
-                        label={isError ? "Error" : ""}
-                        placeholder="Search"
-                        InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            )
-                        }}
-                        variant="outlined"
-                    />
-                )}
-            />
-        </Stack>
+        <Autocomplete
+            freeSolo={true}
+            id="coin-search"
+            data-testid="autocomplete-search"
+            options={coinsList}
+            getOptionLabel={(option) => option.name as string}
+            onChange={updateSelectedCoins}
+            disabled={isError}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    error={isError}
+                    helperText={isError ? "You can only select 10 coins. Please remove a coin to select another." : ""}
+                    label={isError ? "Error" : ""}
+                    placeholder="Search"
+                    InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        )
+                    }}
+                    variant="outlined"
+                />
+            )}
+        />
     );
 };
