@@ -6,7 +6,6 @@ import { SelectedCoins } from "../SelectedCoins/SelectedCoins";
 
 export const HomeContainer = () => {
     const fetchedCoins = useRecoilValue(getCoins);
-
     return (
         <Home maxWidth={false}>
             <ChartBox>
