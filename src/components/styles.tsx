@@ -78,6 +78,8 @@ export const Home = styled(Container)(({ theme }) => {
 export const Chart = styled(Container)(({ theme }) => {
     return {
         display: 'flex',
+        height: "400px",
+        margin: "20px",
         [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
             marginLeft: 'auto',
