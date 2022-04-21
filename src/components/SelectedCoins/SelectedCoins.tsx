@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil';
 import { selectedCoinsState } from '../../recoil/atoms';
 import { coinListState } from "../../recoil/atoms";
 import { CustomButton } from '../styles';
+import { Box } from '@mui/system';
 
 export const SelectedCoins = () => {
     const [coinsList, setCoinsListState] = useRecoilState(coinListState);
@@ -23,7 +24,7 @@ export const SelectedCoins = () => {
     };
 
     return (
-        <>
+        <Box>
             <h2>Currently Selected Crypto Coins</h2>
             <p>Select a coin to remove it.</p>
             <Grid data-testid="coin-grid" container spacing={1}>
@@ -33,6 +34,6 @@ export const SelectedCoins = () => {
                     </Grid>
                 ))}
             </Grid>
-        </>
+        </Box>
     );
 };

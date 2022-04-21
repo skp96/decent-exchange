@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Coin, CoinMarketPrices } from '../interfaces';
 import { usePrevious } from '../../hooks/use-previous';
 import { fetch1DayMarketPrices } from '../../api/fetch-market-prices';
+import { CoinsChart } from './CoinsChart';
+import { Container } from '@mui/material';
 
 export const ChartContainer: React.FC<{ selectedCoins: Coin[]; }> = ({ selectedCoins }) => {
     const prevSelectedCoins = usePrevious(selectedCoins);
@@ -51,5 +53,10 @@ export const ChartContainer: React.FC<{ selectedCoins: Coin[]; }> = ({ selectedC
     const coinRemoved = () => {
         return prevSelectedCoins && selectedCoins.length < prevSelectedCoins.length
     }
-    return (<></>)
+    
+    return (
+        <Container>
+            {coinMarketPrices1Day ? <CoinsChart coinsMarketPrices={coinMarketPrices1Day} /> : ""}
+        </Container>
+    );
 }
