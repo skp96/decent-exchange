@@ -9,9 +9,9 @@ describe("Fetch Market Data API", () => {
         const fakeData = {
             data: {
                 prices: [
-                    ["1/11/2000", 10],
-                    ["1/12/2000", 12],
-                    ["1/23/2000", 23]
+                    [1650546050436, 10],
+                    [1650549843863, 12],
+                    [1650550065000, 23]
                 ]
             }
         };
@@ -23,7 +23,7 @@ describe("Fetch Market Data API", () => {
         const expectedValue = {
             id: "testCoin",
             prices: [10, 12, 23],
-            dates: ["1/11/2000", "1/12/2000", "1/23/2000"]
+            dates: ["4/21/2022, 9:30:00 AM", "4/21/2022, 10:30:00 AM", "4/21/2022, 10:30:00 AM"]
         };
 
         expect(result.id).toEqual(expectedValue.id);

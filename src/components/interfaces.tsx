@@ -7,5 +7,5 @@ export interface Coin{
 export interface CoinMarketPrices{
     id: string | null,
     prices: number[] | null,
-    dates: number[] | null
+    dates: string[] | null
 };
