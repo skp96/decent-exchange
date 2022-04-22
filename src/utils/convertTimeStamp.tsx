@@ -4,5 +4,5 @@ export const convertTimeStamp = (unixTimeStamp: number): string => {
 
     const roundedTime = new Date(Math.ceil(unixTimeStamp / ms) * ms);
 
-    return roundedTime.toLocaleString("en-US");
+    return roundedTime.toLocaleString("en-US", {timeZone: "America/New_York"});
 };
