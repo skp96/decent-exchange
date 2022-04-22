@@ -85,7 +85,7 @@ export const CoinsChart: React.FC<{ coinsMarketPrices: CoinMarketPrices[]; }> = 
             {coinsMarketPrices.length ? <Line options={options} data={data} />
                 :
                 <Box display={"flex"} alignItems={"center"} justifyContent={"center"} height={"450px"} width={"100%"} data-testid={"chart-instructions"}>
-                    Selected a coin to get started!
+                    Select a coin to get started!
                 </Box>
             }
         </>

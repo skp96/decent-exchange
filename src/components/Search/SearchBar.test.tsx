@@ -6,7 +6,6 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "../styles";
 import { SelectedCoins } from "../SelectedCoins/SelectedCoins";
 import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 
 const default_props = {
   coins: [],
