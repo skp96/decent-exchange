@@ -1,8 +1,14 @@
 export const convertTimeStamp = (unixTimeStamp: number): string => {
-    const minutes = 30;
-    const ms = 1000 * 60 * minutes;
+  const date = new Date(unixTimeStamp);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const hour = date.getHours();
+  const minutes = Math.round(date.getMinutes() / 5) * 5;
 
-    const roundedTime = new Date(Math.ceil(unixTimeStamp / ms) * ms);
+  const dateWithRoundedMinutes = new Date(year, month, day, hour, minutes);
 
-    return roundedTime.toLocaleString("en-US", {timeZone: "America/New_York"});
+  return dateWithRoundedMinutes.toLocaleString("en-US", {
+    timeZone: "America/New_York",
+  });
 };
