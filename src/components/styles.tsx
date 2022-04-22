@@ -34,24 +34,52 @@ declare module '@mui/material/styles' {
     }
 }
 
+type Colors = { [key: number]: string; };
+
+export const colors: Colors = {
+    0: "#e57373",
+    1: "#5c6bc0",
+    2: "#9575cd",
+    3: "#4db6ac",
+    4: "#8d6e63",
+    5: "#ffeb3b",
+    6: "#81c784",
+    7: "#64b5f6",
+    8: "#f06292",
+    9: "#4fc3f7"
+};
+
 export const theme = createTheme({
     coinColors: {
-        coin1: red[300],
-        coin2: indigo[400],
-        coin3: deepPurple[300],
-        coin4: teal[300],
-        coin5: brown[400],
-        coin6: yellow[500],
-        coin7: green[300],
-        coin8: blue[300],
-        coin9: pink[300],
-        coin10: lightBlue[300]
+        coin1: colors[0],
+        coin2: colors[1],
+        coin3: colors[2],
+        coin4: colors[3],
+        coin5: colors[4],
+        coin6: colors[5],
+        coin7: colors[6],
+        coin8: colors[7],
+        coin9: colors[8],
+        coin10: colors[9]
     }
 })
 
 export const Home = styled(Container)(({ theme }) => {
     return {
         display: 'flex',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        },
+    };
+});
+
+export const Chart = styled(Container)(({ theme }) => {
+    return {
+        display: 'flex',
+        height: "400px",
+        margin: "20px",
         [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
             marginLeft: 'auto',
