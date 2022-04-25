@@ -22,8 +22,14 @@ export const SelectedCoins = () => {
 
   return (
     <Box>
-      <h2>Currently Selected Crypto Coins</h2>
-      {selectedCoins.length ? <p>Select a coin to remove it.</p> : ""}
+      <h2 className="selected-coins-title">Currently Selected Crypto Coins</h2>
+      {selectedCoins.length ? (
+        <p className="selected-coin-instructions">
+          Select a coin to remove it.
+        </p>
+      ) : (
+        ""
+      )}
       <Grid data-testid="coin-grid" container spacing={1}>
         {selectedCoins.map((coin, idx) => (
           <Grid item key={idx}>
