@@ -26,31 +26,31 @@ ChartJS.register(
 );
 
 export const CoinsChart: React.FC<{
-  coinsMarketPrices: CoinMarketPrices[];
-}> = ({ coinsMarketPrices }) => {
-  const getLabels = () => {
-    if (coinsMarketPrices) {
-      const coin = coinsMarketPrices[0];
-      if (coin && coin.dates) {
-        return coin.dates;
-      }
-    }
-    return undefined;
-  };
-
+  coinsMarketPrices: CoinMarketPrices;
+  colorChoice: number;
+}> = ({ coinsMarketPrices, colorChoice }) => {
   const getDataset = () => {
-    return coinsMarketPrices.map((coin, idx) => ({
-      label: coin.id as string,
-      data: coin.prices as number[],
-      backgroundColor: colors[idx] as string,
-    }));
+    return {
+      label: coinsMarketPrices.id as string,
+      data: coinsMarketPrices.prices as number[],
+      backgroundColor: colors[colorChoice] as string,
+    };
   };
 
   const options: ChartOptions<"line"> = {
     scales: {
       x: {
         ticks: {
-          display: false,
+          callback: function (
+            tickValue: number | string,
+            index: number,
+            ticks: Tick[]
+          ) {
+            if (typeof tickValue === "number") {
+              const label = this.getLabelForValue(tickValue);
+              return label.split(",")[1];
+            }
+          },
         },
         grid: {
           display: false,
@@ -67,7 +67,7 @@ export const CoinsChart: React.FC<{
             ticks: Tick[]
           ) {
             if (typeof tickValue === "number") {
-              return `$${tickValue.toFixed(3)}`;
+              return `$${tickValue.toLocaleString("en-US")}`;
             }
           },
         },
@@ -94,8 +94,7 @@ export const CoinsChart: React.FC<{
             }
             const data = context.parsed.y;
             if (data !== null) {
-              console.log(data);
-              label += `$${data.toFixed(3)}`;
+              label += `$${data.toLocaleString("en-US")}`;
             }
             return label;
           },
@@ -105,28 +104,15 @@ export const CoinsChart: React.FC<{
     maintainAspectRatio: false,
   };
 
-  const labels: string[] | undefined = getLabels();
+  const labels = coinsMarketPrices.dates as string[];
   const data = {
     labels,
-    datasets: getDataset(),
+    datasets: [getDataset()],
   };
 
   return (
     <>
-      {coinsMarketPrices.length ? (
-        <Line options={options} data={data} />
-      ) : (
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          height={"450px"}
-          width={"100%"}
-          data-testid={"chart-instructions"}
-        >
-          Select a coin to get started!
-        </Box>
-      )}
+      <Line options={options} data={data} />
     </>
   );
 };

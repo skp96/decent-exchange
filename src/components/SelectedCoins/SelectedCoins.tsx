@@ -30,7 +30,12 @@ export const SelectedCoins = () => {
       ) : (
         ""
       )}
-      <Grid data-testid="coin-grid" container spacing={1}>
+      <Grid
+        data-testid="coin-grid"
+        container
+        spacing={1}
+        sx={{ justifyContent: "center" }}
+      >
         {selectedCoins.map((coin, idx) => (
           <Grid item key={idx}>
             <CustomButton
