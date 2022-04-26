@@ -48,7 +48,8 @@ export const CoinsChart: React.FC<{
           ) {
             if (typeof tickValue === "number") {
               const label = this.getLabelForValue(tickValue);
-              return label.split(",")[1];
+              const [date, time] = label.split(",");
+              return time;
             }
           },
         },
