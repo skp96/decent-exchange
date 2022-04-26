@@ -1,4 +1,4 @@
-import { CoinMarketPrices } from "../interfaces";
+import { CoinChartData } from "../interfaces";
 import { Line } from "react-chartjs-2";
 import { colors } from "../styles";
 import {
@@ -26,13 +26,13 @@ ChartJS.register(
 );
 
 export const CoinsChart: React.FC<{
-  coinsMarketPrices: CoinMarketPrices;
+  coinChartData: CoinChartData;
   colorChoice: number;
-}> = ({ coinsMarketPrices, colorChoice }) => {
+}> = ({ coinChartData, colorChoice }) => {
   const getDataset = () => {
     return {
-      label: coinsMarketPrices.id as string,
-      data: coinsMarketPrices.prices as number[],
+      label: coinChartData.id as string,
+      data: coinChartData.prices as number[],
       backgroundColor: colors[colorChoice] as string,
     };
   };
@@ -105,7 +105,7 @@ export const CoinsChart: React.FC<{
     maintainAspectRatio: false,
   };
 
-  const labels = coinsMarketPrices.dates as string[];
+  const labels = coinChartData.dates as string[];
   const data = {
     labels,
     datasets: [getDataset()],

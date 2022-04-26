@@ -2,7 +2,7 @@ import { render, waitFor } from "@testing-library/react";
 import { CoinsChart } from "./CoinsChart";
 import { ChartContainer } from "./ChartContainer";
 import { fetchChartDataMock } from "../../mocks/fetch-chart-data-mock";
-import { CoinMarketPrices } from "../interfaces";
+import { CoinChartData } from "../interfaces";
 
 jest.mock("react-chartjs-2", () => ({
   Line: () => <canvas role="img"></canvas>,
@@ -10,13 +10,13 @@ jest.mock("react-chartjs-2", () => ({
 
 describe("CoinsChart", () => {
   test("displays a chart", () => {
-    const coinMarketPrices: CoinMarketPrices = {
+    const coinChartData: CoinChartData = {
       id: "testCoin1",
       prices: [1, 2, 3, 4, 5],
       dates: ["1/1/2022, 2:00:00 AM"],
     };
     const { getByRole } = render(
-      <CoinsChart coinsMarketPrices={coinMarketPrices} colorChoice={1} />
+      <CoinsChart coinChartData={coinChartData} colorChoice={1} />
     );
 
     expect(getByRole("img")).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getChartDataUrl } from "./base-urls";
-import { CoinMarketPrices } from "../components/interfaces";
+import { CoinChartData } from "../components/interfaces";
 import { convertTimeStamp } from "../utils/time-stamp-helpers";
 
 export const fetchChartData = async (
@@ -15,7 +15,7 @@ export const fetchChartData = async (
 };
 
 const extractData = (coinId: string | null, marketData: any) => {
-  const coinMarketData: CoinMarketPrices = {
+  const coinChartData: CoinChartData = {
     id: null,
     prices: null,
     dates: null,
@@ -36,9 +36,9 @@ const extractData = (coinId: string | null, marketData: any) => {
     dates.push(convertedTimeStamp);
   }
 
-  coinMarketData.id = coinId;
-  coinMarketData.prices = prices;
-  coinMarketData.dates = dates;
+  coinChartData.id = coinId;
+  coinChartData.prices = prices;
+  coinChartData.dates = dates;
 
-  return coinMarketData;
+  return coinChartData;
 };

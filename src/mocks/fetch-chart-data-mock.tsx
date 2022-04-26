@@ -1,11 +1,11 @@
-import { CoinMarketPrices } from "../components/interfaces";
+import { CoinChartData } from "../components/interfaces";
 import { LIVE } from "../api/time-periods";
 
 export const fetchChartDataMock = (
   coinId: string | null,
   timePeriod: string
-): Promise<CoinMarketPrices> => {
-  let data: CoinMarketPrices;
+): Promise<CoinChartData> => {
+  let data: CoinChartData;
 
   switch (timePeriod) {
     case LIVE:

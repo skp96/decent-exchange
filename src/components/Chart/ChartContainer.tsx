@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Coin, CoinMarketPrices } from "../interfaces";
+import { Coin, CoinChartData } from "../interfaces";
 import { usePrevious } from "../../hooks/use-previous";
 import { CoinsChart } from "./CoinsChart";
 import { Chart } from "../styles";
@@ -14,36 +14,34 @@ export const ChartContainer: React.FC<{
   fetchChartData: (
     coinId: string | null,
     timePeriod: string
-  ) => Promise<CoinMarketPrices>;
+  ) => Promise<CoinChartData>;
 }> = ({ selectedCoins, fetchChartData }) => {
   const prevSelectedCoins = usePrevious(selectedCoins);
-  const [coinMarketPrices1Day, setcoinMarketPrices1Day] = useState<
-    CoinMarketPrices[]
-  >([]);
+  const [coinsChartData, setCoinsChartData] = useState<CoinChartData[]>([]);
 
   useEffect(() => {
-    const updateCoinMarketPrices = async () => {
+    const updateCoinsChartData = async () => {
       if (coinAdded()) {
         const coin = selectedCoins[selectedCoins.length - 1];
-        const coinMarketPrices: CoinMarketPrices = await fetchChartData(
+        const coinChartData: CoinChartData = await fetchChartData(
           coin.id,
           LIVE
         );
-        setcoinMarketPrices1Day([...coinMarketPrices1Day, coinMarketPrices]);
+        setCoinsChartData([...coinsChartData, coinChartData]);
       } else if (coinRemoved()) {
         const coinToRemoveIndex = findCoinToRemoveByIndex();
 
         if (coinToRemoveIndex || coinToRemoveIndex === 0) {
-          setcoinMarketPrices1Day([
-            ...coinMarketPrices1Day.slice(0, coinToRemoveIndex),
-            ...coinMarketPrices1Day.slice(coinToRemoveIndex + 1),
+          setCoinsChartData([
+            ...coinsChartData.slice(0, coinToRemoveIndex),
+            ...coinsChartData.slice(coinToRemoveIndex + 1),
           ]);
         }
       }
     };
 
-    updateCoinMarketPrices().catch(console.error);
-  }, [selectedCoins, coinMarketPrices1Day]);
+    updateCoinsChartData().catch(console.error);
+  }, [selectedCoins, coinsChartData]);
 
   const findCoinToRemoveByIndex = () => {
     const selectedCoinById = selectedCoins.map(
@@ -70,15 +68,15 @@ export const ChartContainer: React.FC<{
 
   return (
     <Chart maxWidth={false}>
-      {coinMarketPrices1Day.length ? (
+      {coinsChartData.length ? (
         <Grid container spacing={10}>
-          {coinMarketPrices1Day.map((prices, idx) => (
+          {coinsChartData.map((coinChartData, idx) => (
             <ChartItem
               item
               key={idx}
               sx={{ height: "50%", width: "33.3%", paddingLeft: 0 }}
             >
-              <CoinsChart coinsMarketPrices={prices} colorChoice={idx} />
+              <CoinsChart coinChartData={coinChartData} colorChoice={idx} />
               <ToggleChart />
             </ChartItem>
           ))}
