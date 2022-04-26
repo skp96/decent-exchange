@@ -22,7 +22,7 @@ describe("Fetch Market Data API", () => {
     const expectedValue = {
       id: "testCoin",
       prices: [10, 12, 23],
-      dates: ["4/21/2022, 9:00", "4/21/2022, 10:04", "4/21/2022, 10:07"],
+      dates: ["4/21/2022, 09:00", "4/21/2022, 10:04", "4/21/2022, 10:07"],
     };
 
     expect(result.id).toEqual(expectedValue.id);

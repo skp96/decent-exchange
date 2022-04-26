@@ -1,18 +1,11 @@
 export const convertTimeStamp = (unixTimeStamp: number): string => {
   const date = new Date(unixTimeStamp);
-  const formattedDate = date.toLocaleDateString("en-US");
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+  const formattedTimeStamp = date.toLocaleDateString("en-US", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "America/New_York",
+  });
 
-  let formattedMinutes: string | number;
-
-  if (minutes < 10) {
-    formattedMinutes = `0${minutes}`;
-  } else {
-    formattedMinutes = minutes;
-  }
-
-  const formattedTime = `${hours}:${formattedMinutes}`;
-
-  return `${formattedDate}, ${formattedTime}`;
+  return formattedTimeStamp;
 };
