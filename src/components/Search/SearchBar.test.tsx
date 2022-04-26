@@ -61,7 +61,7 @@ describe("SearchBar Component", () => {
     expect(input).toHaveValue("Bitcoin");
   });
 
-  test("display error when user selects more than 10 coins", () => {
+  test("display error when user selects more than 9 coins", () => {
     const coins: Coin[] = [
       { id: "coin1", symbol: "coin1", name: "Coin1" },
       { id: "coin2", symbol: "coin2", name: "Coin2" },
@@ -73,7 +73,6 @@ describe("SearchBar Component", () => {
       { id: "coin8", symbol: "coin8", name: "Coin8" },
       { id: "coin9", symbol: "coin9", name: "Coin9" },
       { id: "coin10", symbol: "coin10", name: "Coin10" },
-      { id: "coin11", symbol: "coin11", name: "Coin11" },
     ];
 
     const { getByTestId, getByRole } = render(
@@ -96,12 +95,12 @@ describe("SearchBar Component", () => {
 
     const errorMessage = getByRole("combobox", {
       description:
-        "You can only select 10 coins. Please remove a coin to select another.",
+        "You can only select 9 coins. Please remove a coin to select another.",
     });
     expect(errorMessage).toBeInTheDocument();
   });
 
-  test("input text field is disabled when user has selected 10 coins", () => {
+  test("input text field is disabled when user has selected 9 coins", () => {
     const coins: Coin[] = [
       { id: "coin1", symbol: "coin1", name: "Coin1" },
       { id: "coin2", symbol: "coin2", name: "Coin2" },
@@ -224,7 +223,7 @@ describe("SearchBar Component", () => {
 
     const coin1 = getByText("Coin1");
     const errorMessage = getByText(
-      "You can only select 10 coins. Please remove a coin to select another."
+      "You can only select 9 coins. Please remove a coin to select another."
     );
 
     userEvent.click(coin1);

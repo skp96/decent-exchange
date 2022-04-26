@@ -1,7 +1,7 @@
 import axios from "axios";
 import { get1DayChartDataUrl } from "./base-urls";
 import { CoinMarketPrices } from "../components/interfaces";
-import { convertTimeStamp } from "../utils/convertTimeStamp";
+import { convertTimeStamp } from "../utils/time-stamp-helpers";
 
 export const fetch1DayMarketPrices = async (coinId: string | null) => {
   const apiUrl = get1DayChartDataUrl(coinId);

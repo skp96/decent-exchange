@@ -3,6 +3,9 @@ import { Coin, CoinMarketPrices } from "../interfaces";
 import { usePrevious } from "../../hooks/use-previous";
 import { CoinsChart } from "./CoinsChart";
 import { Chart } from "../styles";
+import { Box } from "@mui/system";
+import { Grid } from "@mui/material";
+import { ChartItem } from "../styles";
 
 export const ChartContainer: React.FC<{
   selectedCoins: Coin[];
@@ -60,11 +63,30 @@ export const ChartContainer: React.FC<{
   };
 
   return (
-    <Chart>
-      {coinMarketPrices1Day ? (
-        <CoinsChart coinsMarketPrices={coinMarketPrices1Day} />
+    <Chart maxWidth={false}>
+      {coinMarketPrices1Day.length ? (
+        <Grid container spacing={3}>
+          {coinMarketPrices1Day.map((prices, idx) => (
+            <ChartItem
+              item
+              key={idx}
+              sx={{ height: "50%", width: "33.3%", paddingLeft: 0 }}
+            >
+              <CoinsChart coinsMarketPrices={prices} colorChoice={idx} />
+            </ChartItem>
+          ))}
+        </Grid>
       ) : (
-        ""
+        <Box
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          height={"450px"}
+          width={"100%"}
+          data-testid={"chart-instructions"}
+        >
+          Select a coin to get started!
+        </Box>
       )}
     </Chart>
   );
