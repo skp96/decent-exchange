@@ -1,7 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import { CoinsChart } from "./CoinsChart";
 import { ChartContainer } from "./ChartContainer";
-import { fetch1DayMarketPricesMock } from "../../mocks/fetch-1Day-Market-Prices-mock";
+import { fetchChartDataMock } from "../../mocks/fetch-chart-data-mock";
 import { CoinMarketPrices } from "../interfaces";
 
 jest.mock("react-chartjs-2", () => ({
@@ -24,10 +24,7 @@ describe("CoinsChart", () => {
 
   test("displays a message when no prices", async () => {
     const { getByText } = render(
-      <ChartContainer
-        selectedCoins={[]}
-        fetchMarketPrices={fetch1DayMarketPricesMock}
-      />
+      <ChartContainer selectedCoins={[]} fetchChartData={fetchChartDataMock} />
     );
 
     expect(getByText("Select a coin to get started!")).toBeInTheDocument();
@@ -45,7 +42,7 @@ describe("CoinsChart", () => {
     const { getAllByRole, getByText } = render(
       <ChartContainer
         selectedCoins={selectedCoins}
-        fetchMarketPrices={fetch1DayMarketPricesMock}
+        fetchChartData={fetchChartDataMock}
       />
     );
 

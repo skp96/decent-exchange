@@ -1,4 +1,4 @@
-import { fetch1DayMarketPrices } from "./fetch-market-prices";
+import { fetchChartData } from "./fetch-chart-data";
 import axios from "axios";
 
 jest.mock("axios");
@@ -17,7 +17,7 @@ describe("Fetch Market Data API", () => {
 
     mockedAxios.get.mockImplementationOnce(() => Promise.resolve(fakeData));
 
-    const result = await fetch1DayMarketPrices("testCoin");
+    const result = await fetchChartData("testCoin", "1");
 
     const expectedValue = {
       id: "testCoin",

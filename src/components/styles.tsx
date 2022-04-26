@@ -31,11 +31,6 @@ declare module "@mui/material/styles" {
       coin10?: string;
     };
   }
-<<<<<<< HEAD
-}
-
-type Colors = { [key: number]: string };
-=======
 
   interface PaletteColor {
     light: string;
@@ -46,7 +41,6 @@ type Colors = { [key: number]: string };
 }
 
 type Colors = { [key: number | string]: string };
->>>>>>> 3d15664 (moved instructions on how to get started out of CoinChart and into ChartContainer component and fixed tests, styling for ToggleChart)
 
 export const colors: Colors = {
   0: "#e57373",
@@ -132,7 +126,13 @@ export const ButtonGrid = styled(Grid)(({ theme }) => {
 
 export const ToggleButton = styled(Button)(({ theme }) => {
   return {
-    minWidth: "50px",
+    minWidth: "17px",
+    [theme.breakpoints.down("md")]: {
+      minWidth: "75px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      minWidth: "50px",
+    },
   };
 });
 

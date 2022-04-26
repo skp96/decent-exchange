@@ -6,11 +6,16 @@ import { Chart } from "../styles";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
 import { ChartItem } from "../styles";
+import { ToggleChart } from "./ToggleChart";
+import { LIVE } from "../../api/time-periods";
 
 export const ChartContainer: React.FC<{
   selectedCoins: Coin[];
-  fetchMarketPrices: (coinId: string | null) => Promise<CoinMarketPrices>;
-}> = ({ selectedCoins, fetchMarketPrices }) => {
+  fetchChartData: (
+    coinId: string | null,
+    timePeriod: string
+  ) => Promise<CoinMarketPrices>;
+}> = ({ selectedCoins, fetchChartData }) => {
   const prevSelectedCoins = usePrevious(selectedCoins);
   const [coinMarketPrices1Day, setcoinMarketPrices1Day] = useState<
     CoinMarketPrices[]
@@ -20,8 +25,9 @@ export const ChartContainer: React.FC<{
     const updateCoinMarketPrices = async () => {
       if (coinAdded()) {
         const coin = selectedCoins[selectedCoins.length - 1];
-        const coinMarketPrices: CoinMarketPrices = await fetchMarketPrices(
-          coin.id
+        const coinMarketPrices: CoinMarketPrices = await fetchChartData(
+          coin.id,
+          LIVE
         );
         setcoinMarketPrices1Day([...coinMarketPrices1Day, coinMarketPrices]);
       } else if (coinRemoved()) {
@@ -65,7 +71,7 @@ export const ChartContainer: React.FC<{
   return (
     <Chart maxWidth={false}>
       {coinMarketPrices1Day.length ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={10}>
           {coinMarketPrices1Day.map((prices, idx) => (
             <ChartItem
               item
@@ -73,6 +79,7 @@ export const ChartContainer: React.FC<{
               sx={{ height: "50%", width: "33.3%", paddingLeft: 0 }}
             >
               <CoinsChart coinsMarketPrices={prices} colorChoice={idx} />
+              <ToggleChart />
             </ChartItem>
           ))}
         </Grid>

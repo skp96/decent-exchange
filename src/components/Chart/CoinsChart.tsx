@@ -95,11 +95,7 @@ export const CoinsChart: React.FC<{
             }
             const data = context.parsed.y;
             if (data !== null) {
-<<<<<<< HEAD
               label += `$${data.toLocaleString("en-US")}`;
-=======
-              label += `$${data.toFixed(3)}`;
->>>>>>> 3d15664 (moved instructions on how to get started out of CoinChart and into ChartContainer component and fixed tests, styling for ToggleChart)
             }
             return label;
           },
