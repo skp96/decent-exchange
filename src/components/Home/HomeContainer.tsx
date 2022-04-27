@@ -5,7 +5,7 @@ import { Home, ChartBox } from "../styles";
 import { SelectedCoins } from "../SelectedCoins/SelectedCoins";
 import { ChartContainer } from "../Chart/ChartContainer";
 import { selectedCoinsState } from "../../recoil/atoms";
-import { fetch1DayMarketPrices } from "../../api/fetch-market-prices";
+import { fetchChartData } from "../../api/fetch-chart-data";
 
 export const HomeContainer = () => {
   const fetchedCoins = useRecoilValue(getCoins);
@@ -17,7 +17,7 @@ export const HomeContainer = () => {
         <SelectedCoins />
         <ChartContainer
           selectedCoins={selectedCoins}
-          fetchMarketPrices={fetch1DayMarketPrices}
+          fetchChartData={fetchChartData}
         />
       </ChartBox>
     </Home>

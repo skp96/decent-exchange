@@ -31,9 +31,16 @@ declare module "@mui/material/styles" {
       coin10?: string;
     };
   }
+
+  interface PaletteColor {
+    light: string;
+    main: string;
+    dark: string;
+    contrastText: string;
+  }
 }
 
-type Colors = { [key: number]: string };
+type Colors = { [key: number | string]: string };
 
 export const colors: Colors = {
   0: "#e57373",
@@ -60,6 +67,11 @@ export const theme = createTheme({
     coin8: colors[7],
     coin9: colors[8],
     coin10: colors[9],
+  },
+  palette: {
+    primary: {
+      main: "#21CE99",
+    },
   },
 });
 
@@ -101,6 +113,25 @@ export const ChartItem = styled(Grid)(({ theme }) => {
     paddingLeft: 0,
     [theme.breakpoints.down("md")]: {
       width: "100%",
+    },
+  };
+});
+
+export const ButtonGrid = styled(Grid)(({ theme }) => {
+  return {
+    marginTop: 20,
+    justifyContent: "space-between",
+  };
+});
+
+export const ToggleButton = styled(Button)(({ theme }) => {
+  return {
+    minWidth: "17px",
+    [theme.breakpoints.down("md")]: {
+      minWidth: "75px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      minWidth: "50px",
     },
   };
 });

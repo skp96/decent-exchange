@@ -1,43 +1,79 @@
 import { useState, useEffect } from "react";
-import { Coin, CoinMarketPrices } from "../interfaces";
-import { usePrevious } from "../../hooks/use-previous";
+import { Coin, CoinChartData } from "../interfaces";
+import {
+  usePreviousSelectedCoins,
+  usePreviousSelectedCoin,
+} from "../../hooks/previous-state-hooks";
 import { CoinsChart } from "./CoinsChart";
 import { Chart } from "../styles";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
 import { ChartItem } from "../styles";
+import { ToggleChart } from "./ToggleChart";
+import { LIVE } from "../../api/time-periods";
+import { selectedCoinState } from "../../recoil/atoms";
+import { useRecoilValue } from "recoil";
 
 export const ChartContainer: React.FC<{
   selectedCoins: Coin[];
-  fetchMarketPrices: (coinId: string | null) => Promise<CoinMarketPrices>;
-}> = ({ selectedCoins, fetchMarketPrices }) => {
-  const prevSelectedCoins = usePrevious(selectedCoins);
-  const [coinMarketPrices1Day, setcoinMarketPrices1Day] = useState<
-    CoinMarketPrices[]
-  >([]);
+  fetchChartData: (
+    coinId: string | null,
+    timePeriod: string | null
+  ) => Promise<CoinChartData>;
+}> = ({ selectedCoins, fetchChartData }) => {
+  const prevSelectedCoins = usePreviousSelectedCoins(selectedCoins);
+  const [coinsChartData, setCoinsChartData] = useState<CoinChartData[]>([]);
 
   useEffect(() => {
-    const updateCoinMarketPrices = async () => {
+    const updateCoinsChartData = async () => {
       if (coinAdded()) {
         const coin = selectedCoins[selectedCoins.length - 1];
-        const coinMarketPrices: CoinMarketPrices = await fetchMarketPrices(
-          coin.id
+        const coinChartData: CoinChartData = await fetchChartData(
+          coin.id,
+          LIVE
         );
-        setcoinMarketPrices1Day([...coinMarketPrices1Day, coinMarketPrices]);
+        setCoinsChartData([...coinsChartData, coinChartData]);
       } else if (coinRemoved()) {
         const coinToRemoveIndex = findCoinToRemoveByIndex();
 
         if (coinToRemoveIndex || coinToRemoveIndex === 0) {
-          setcoinMarketPrices1Day([
-            ...coinMarketPrices1Day.slice(0, coinToRemoveIndex),
-            ...coinMarketPrices1Day.slice(coinToRemoveIndex + 1),
+          setCoinsChartData([
+            ...coinsChartData.slice(0, coinToRemoveIndex),
+            ...coinsChartData.slice(coinToRemoveIndex + 1),
           ]);
         }
       }
     };
 
-    updateCoinMarketPrices().catch(console.error);
-  }, [selectedCoins, coinMarketPrices1Day]);
+    updateCoinsChartData().catch(console.error);
+  }, [selectedCoins]);
+
+  const selectedCoin = useRecoilValue(selectedCoinState);
+  const prevSelectedCoin = usePreviousSelectedCoin(selectedCoin);
+
+  useEffect(() => {
+    const updateChartData = async () => {
+      if (
+        prevSelectedCoin.symbol !== selectedCoin.symbol ||
+        prevSelectedCoin.timePeriod !== selectedCoin.timePeriod
+      ) {
+        const coinChartData: CoinChartData = await fetchChartData(
+          selectedCoin.symbol,
+          selectedCoin.timePeriod
+        );
+
+        if (typeof selectedCoin.id === "number" && selectedCoin.id >= 0) {
+          setCoinsChartData([
+            ...coinsChartData.slice(0, selectedCoin.id),
+            coinChartData,
+            ...coinsChartData.slice(selectedCoin.id + 1),
+          ]);
+        }
+      }
+    };
+
+    updateChartData().catch(console.error);
+  }, [selectedCoin]);
 
   const findCoinToRemoveByIndex = () => {
     const selectedCoinById = selectedCoins.map(
@@ -64,15 +100,22 @@ export const ChartContainer: React.FC<{
 
   return (
     <Chart maxWidth={false}>
-      {coinMarketPrices1Day.length ? (
-        <Grid container spacing={3}>
-          {coinMarketPrices1Day.map((prices, idx) => (
+      {coinsChartData.length ? (
+        <Grid container spacing={10} sx={{ marginTop: 0 }}>
+          {coinsChartData.map((coinChartData, idx) => (
             <ChartItem
               item
-              key={idx}
+              key={`${coinChartData.id}-${idx}`}
               sx={{ height: "50%", width: "33.3%", paddingLeft: 0 }}
             >
-              <CoinsChart coinsMarketPrices={prices} colorChoice={idx} />
+              <CoinsChart coinChartData={coinChartData} colorChoice={idx} />
+              <ToggleChart
+                id={idx}
+                symbol={coinChartData.id ? coinChartData.id : ""}
+                timePeriod={
+                  coinChartData.timePeriod ? coinChartData.timePeriod : ""
+                }
+              />
             </ChartItem>
           ))}
         </Grid>
