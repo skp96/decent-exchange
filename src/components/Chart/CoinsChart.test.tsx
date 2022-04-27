@@ -36,7 +36,7 @@ describe("CoinsChart", () => {
       </RecoilRoot>
     );
 
-    expect(getByText("Select a coin to get started!")).toBeInTheDocument();
+    expect(getByText("Search a coin to get started!")).toBeInTheDocument();
   });
 
   test("displays a chart when coins have been selected", async () => {
@@ -57,7 +57,7 @@ describe("CoinsChart", () => {
       </RecoilRoot>
     );
 
-    const getStartedMessage = getByText("Select a coin to get started!");
+    const getStartedMessage = getByText("Search a coin to get started!");
 
     await waitFor(() => {
       expect(getStartedMessage).not.toBeInTheDocument();
