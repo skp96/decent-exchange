@@ -3,6 +3,7 @@ import { CoinsChart } from "./CoinsChart";
 import { ChartContainer } from "./ChartContainer";
 import { fetchChartDataMock } from "../../mocks/fetch-chart-data-mock";
 import { CoinChartData } from "../interfaces";
+import { RecoilRoot } from "recoil";
 
 jest.mock("react-chartjs-2", () => ({
   Line: () => <canvas role="img"></canvas>,
@@ -14,9 +15,12 @@ describe("CoinsChart", () => {
       id: "testCoin1",
       prices: [1, 2, 3, 4, 5],
       dates: ["1/1/2022, 2:00:00 AM"],
+      timePeriod: "1",
     };
     const { getByRole } = render(
-      <CoinsChart coinChartData={coinChartData} colorChoice={1} />
+      <RecoilRoot>
+        <CoinsChart coinChartData={coinChartData} colorChoice={1} />
+      </RecoilRoot>
     );
 
     expect(getByRole("img")).toBeInTheDocument();
@@ -24,7 +28,12 @@ describe("CoinsChart", () => {
 
   test("displays a message when no prices", async () => {
     const { getByText } = render(
-      <ChartContainer selectedCoins={[]} fetchChartData={fetchChartDataMock} />
+      <RecoilRoot>
+        <ChartContainer
+          selectedCoins={[]}
+          fetchChartData={fetchChartDataMock}
+        />
+      </RecoilRoot>
     );
 
     expect(getByText("Select a coin to get started!")).toBeInTheDocument();
@@ -40,10 +49,12 @@ describe("CoinsChart", () => {
     ];
 
     const { getAllByRole, getByText } = render(
-      <ChartContainer
-        selectedCoins={selectedCoins}
-        fetchChartData={fetchChartDataMock}
-      />
+      <RecoilRoot>
+        <ChartContainer
+          selectedCoins={selectedCoins}
+          fetchChartData={fetchChartDataMock}
+        />
+      </RecoilRoot>
     );
 
     const getStartedMessage = getByText("Select a coin to get started!");

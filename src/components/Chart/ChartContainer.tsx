@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Coin, CoinChartData } from "../interfaces";
-import { usePrevious } from "../../hooks/use-previous";
+import {
+  usePreviousSelectedCoins,
+  usePreviousSelectedCoin,
+} from "../../hooks/previous-state-hooks";
 import { CoinsChart } from "./CoinsChart";
 import { Chart } from "../styles";
 import { Box } from "@mui/system";
@@ -8,15 +11,17 @@ import { Grid } from "@mui/material";
 import { ChartItem } from "../styles";
 import { ToggleChart } from "./ToggleChart";
 import { LIVE } from "../../api/time-periods";
+import { selectedCoinState } from "../../recoil/atoms";
+import { useRecoilValue } from "recoil";
 
 export const ChartContainer: React.FC<{
   selectedCoins: Coin[];
   fetchChartData: (
     coinId: string | null,
-    timePeriod: string
+    timePeriod: string | null
   ) => Promise<CoinChartData>;
 }> = ({ selectedCoins, fetchChartData }) => {
-  const prevSelectedCoins = usePrevious(selectedCoins);
+  const prevSelectedCoins = usePreviousSelectedCoins(selectedCoins);
   const [coinsChartData, setCoinsChartData] = useState<CoinChartData[]>([]);
 
   useEffect(() => {
@@ -41,7 +46,34 @@ export const ChartContainer: React.FC<{
     };
 
     updateCoinsChartData().catch(console.error);
-  }, [selectedCoins, coinsChartData]);
+  }, [selectedCoins]);
+
+  const selectedCoin = useRecoilValue(selectedCoinState);
+  const prevSelectedCoin = usePreviousSelectedCoin(selectedCoin);
+
+  useEffect(() => {
+    const updateChartData = async () => {
+      if (
+        prevSelectedCoin.symbol !== selectedCoin.symbol ||
+        prevSelectedCoin.timePeriod !== selectedCoin.timePeriod
+      ) {
+        const coinChartData: CoinChartData = await fetchChartData(
+          selectedCoin.symbol,
+          selectedCoin.timePeriod
+        );
+
+        if (typeof selectedCoin.id === "number" && selectedCoin.id >= 0) {
+          setCoinsChartData([
+            ...coinsChartData.slice(0, selectedCoin.id),
+            coinChartData,
+            ...coinsChartData.slice(selectedCoin.id + 1),
+          ]);
+        }
+      }
+    };
+
+    updateChartData().catch(console.error);
+  }, [selectedCoin]);
 
   const findCoinToRemoveByIndex = () => {
     const selectedCoinById = selectedCoins.map(
@@ -69,15 +101,21 @@ export const ChartContainer: React.FC<{
   return (
     <Chart maxWidth={false}>
       {coinsChartData.length ? (
-        <Grid container spacing={10}>
+        <Grid container spacing={10} sx={{ marginTop: 0 }}>
           {coinsChartData.map((coinChartData, idx) => (
             <ChartItem
               item
-              key={idx}
+              key={`${coinChartData.id}-${idx}`}
               sx={{ height: "50%", width: "33.3%", paddingLeft: 0 }}
             >
               <CoinsChart coinChartData={coinChartData} colorChoice={idx} />
-              <ToggleChart />
+              <ToggleChart
+                id={idx}
+                symbol={coinChartData.id ? coinChartData.id : ""}
+                timePeriod={
+                  coinChartData.timePeriod ? coinChartData.timePeriod : ""
+                }
+              />
             </ChartItem>
           ))}
         </Grid>

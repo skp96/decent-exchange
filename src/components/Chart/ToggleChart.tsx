@@ -8,12 +8,32 @@ import {
   YTD,
   YEAR5,
 } from "../../api/time-periods";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { SelectedCoin } from "../interfaces";
+import { selectedCoinState } from "../../recoil/atoms";
+import { useSetRecoilState } from "recoil";
 
-export const ToggleChart = () => {
+export const ToggleChart: React.FC<{
+  id: number;
+  symbol: string;
+  timePeriod: string;
+}> = ({ id, symbol, timePeriod }) => {
   const [buttonVariant, setButtonVariant] = useState(LIVE);
+  const setSelectedCoin = useSetRecoilState(selectedCoinState);
+
+  useEffect(() => {
+    setButtonVariant(timePeriod);
+  }, [timePeriod]);
+
   const handleClick = (selectedTimePeriod: string) => {
     setButtonVariant(selectedTimePeriod);
+
+    const selectedCoin: SelectedCoin = {
+      symbol: symbol,
+      timePeriod: selectedTimePeriod,
+      id: id,
+    };
+    setSelectedCoin(selectedCoin);
   };
   return (
     <ButtonGrid container>

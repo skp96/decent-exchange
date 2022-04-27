@@ -1,6 +1,8 @@
 import { CoinChartData } from "../interfaces";
 import { Line } from "react-chartjs-2";
 import { colors } from "../styles";
+import { labelFormatter } from "../../utils/label-formatter";
+import { WEEK1 } from "../../api/time-periods";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +15,6 @@ import {
   ChartOptions,
   Tick,
 } from "chart.js";
-import { Box } from "@mui/system";
 
 ChartJS.register(
   CategoryScale,
@@ -48,10 +49,14 @@ export const CoinsChart: React.FC<{
           ) {
             if (typeof tickValue === "number") {
               const label = this.getLabelForValue(tickValue);
-              const [date, time] = label.split(",");
-              return time;
+              const timePeriod = coinChartData.timePeriod as string;
+              return labelFormatter(label, timePeriod);
             }
           },
+          maxTicksLimit:
+            coinChartData.timePeriod && coinChartData.timePeriod === WEEK1
+              ? 7
+              : 10,
         },
         grid: {
           display: false,
@@ -110,7 +115,6 @@ export const CoinsChart: React.FC<{
     labels,
     datasets: [getDataset()],
   };
-
   return (
     <>
       <Line options={options} data={data} />
