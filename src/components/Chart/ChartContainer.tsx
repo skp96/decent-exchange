@@ -85,7 +85,7 @@ export const ChartContainer: React.FC<{
           width={"100%"}
           data-testid={"chart-instructions"}
         >
-          Select a coin to get started!
+          Search a coin to get started!
         </Box>
       )}
     </Chart>
