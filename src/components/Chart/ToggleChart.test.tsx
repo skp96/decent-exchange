@@ -60,6 +60,7 @@ describe("ToggleChart Component", () => {
         id: "testCoin1",
         name: "TestCoin1",
         symbol: "tc",
+        colorChoice: 0,
       },
     ];
 

@@ -21,7 +21,9 @@ describe("SelectCoins Component", () => {
   });
 
   test("display instructions on how to remove coins", async () => {
-    const coins: Coin[] = [{ id: "coin1", symbol: "coin1", name: "Coin1" }];
+    const coins: Coin[] = [
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+    ];
 
     const { getByText, getByTestId } = render(
       <RecoilRoot>
@@ -47,8 +49,8 @@ describe("SelectCoins Component", () => {
 
   test("when user selects coins, those coins are displayed", () => {
     const coins: Coin[] = [
-      { id: "coin1", symbol: "coin1", name: "Coin1" },
-      { id: "coin2", symbol: "coin2", name: "Coin2" },
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+      { id: "coin2", symbol: "coin2", name: "Coin2", colorChoice: 1 },
     ];
 
     const { getByTestId, getByText } = render(
@@ -77,7 +79,9 @@ describe("SelectCoins Component", () => {
   });
 
   test("when user selects a displayed coin, it is removed", async () => {
-    const coins: Coin[] = [{ id: "coin1", symbol: "coin1", name: "Coin1" }];
+    const coins: Coin[] = [
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+    ];
 
     const { getByTestId, getByText } = render(
       <RecoilRoot>

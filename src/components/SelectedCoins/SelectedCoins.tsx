@@ -40,7 +40,7 @@ export const SelectedCoins = () => {
           <Grid item key={idx}>
             <CustomButton
               size={"small"}
-              colornumber={idx}
+              colornumber={coin.colorChoice as number}
               onClick={() => removeSelectedCoin(idx)}
             >
               {coin.name}

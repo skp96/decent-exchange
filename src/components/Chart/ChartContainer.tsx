@@ -11,8 +11,8 @@ import { Grid } from "@mui/material";
 import { ChartItem } from "../styles";
 import { ToggleChart } from "./ToggleChart";
 import { LIVE } from "../../api/time-periods";
-import { selectedCoinState } from "../../recoil/atoms";
-import { useRecoilValue } from "recoil";
+import { selectedCoinState, colorChoiceState } from "../../recoil/atoms";
+import { useRecoilValue, useRecoilState } from "recoil";
 
 export const ChartContainer: React.FC<{
   selectedCoins: Coin[];
@@ -23,6 +23,7 @@ export const ChartContainer: React.FC<{
 }> = ({ selectedCoins, fetchChartData }) => {
   const prevSelectedCoins = usePreviousSelectedCoins(selectedCoins);
   const [coinsChartData, setCoinsChartData] = useState<CoinChartData[]>([]);
+  const [colorChoices, setColorChoices] = useRecoilState(colorChoiceState);
 
   useEffect(() => {
     const updateCoinsChartData = async () => {
@@ -34,9 +35,15 @@ export const ChartContainer: React.FC<{
         );
         setCoinsChartData([...coinsChartData, coinChartData]);
       } else if (coinRemoved()) {
-        const coinToRemoveIndex = findCoinToRemoveByIndex();
+        const [coinToRemove, coinToRemoveIndex] = findCoinToRemoveByIndex();
 
-        if (coinToRemoveIndex || coinToRemoveIndex === 0) {
+        if (coinToRemove !== undefined) {
+          const colorChoice = coinToRemove.colorChoice as number;
+
+          setColorChoices([...colorChoices, colorChoice]);
+        }
+
+        if (typeof coinToRemoveIndex === "number") {
           setCoinsChartData([
             ...coinsChartData.slice(0, coinToRemoveIndex),
             ...coinsChartData.slice(coinToRemoveIndex + 1),
@@ -75,7 +82,9 @@ export const ChartContainer: React.FC<{
     updateChartData().catch(console.error);
   }, [selectedCoin]);
 
-  const findCoinToRemoveByIndex = () => {
+  const findCoinToRemoveByIndex = ():
+    | [Coin, number]
+    | [undefined, undefined] => {
     const selectedCoinById = selectedCoins.map(
       (selectedCoin) => selectedCoin.id
     );
@@ -85,9 +94,10 @@ export const ChartContainer: React.FC<{
         prevSelectedCoin.id &&
         !selectedCoinById.includes(prevSelectedCoin.id)
       ) {
-        return i;
+        return [prevSelectedCoin, i];
       }
     }
+    return [undefined, undefined];
   };
 
   const coinAdded = () => {
@@ -108,7 +118,7 @@ export const ChartContainer: React.FC<{
               key={`${coinChartData.id}-${idx}`}
               sx={{ height: "50%", width: "33.3%", paddingLeft: 0 }}
             >
-              <CoinsChart coinChartData={coinChartData} colorChoice={idx} />
+              <CoinsChart coinChartData={coinChartData} />
               <ToggleChart
                 id={idx}
                 symbol={coinChartData.id ? coinChartData.id : ""}

@@ -19,7 +19,7 @@ describe("CoinsChart", () => {
     };
     const { getByRole } = render(
       <RecoilRoot>
-        <CoinsChart coinChartData={coinChartData} colorChoice={1} />
+        <CoinsChart coinChartData={coinChartData} />
       </RecoilRoot>
     );
 
@@ -45,6 +45,7 @@ describe("CoinsChart", () => {
         id: "testCoin1",
         name: "TestCoin1",
         symbol: "tc",
+        colorChoice: 0,
       },
     ];
 
