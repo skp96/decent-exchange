@@ -36,16 +36,19 @@ describe("SearchBar Component", () => {
     expect(searchIcon).toBeInTheDocument();
   });
 
-  test("as a user searches for coins, the search bar filters for results by name", () => {
+  test("as a user searches for coins, the search bar filters for results by name", async () => {
     const coins: Coin[] = [
-      { id: "bitcoin", symbol: "btc", name: "Bitcoin" },
-      { id: "ethereum", symbol: "ethereum", name: "Ethereum" },
-      { id: "solana", symbol: "sol", name: "Solana" },
+      { id: "bitcoin", symbol: "btc", name: "Bitcoin", colorChoice: 0 },
+      { id: "ethereum", symbol: "ethereum", name: "Ethereum", colorChoice: 1 },
+      { id: "solana", symbol: "sol", name: "Solana", colorChoice: 2 },
     ];
 
-    const { getByTestId } = render(
+    const { getByTestId, getByText } = render(
       <RecoilRoot>
-        <SearchBar coins={coins} />
+        <ThemeProvider theme={theme}>
+          <SearchBar coins={coins} />
+          <SelectedCoins />
+        </ThemeProvider>
       </RecoilRoot>
     );
 
@@ -58,21 +61,24 @@ describe("SearchBar Component", () => {
     fireEvent.keyDown(autoCompleteSearch, { key: "ArrowDown" });
     fireEvent.keyDown(autoCompleteSearch, { key: "Enter" });
 
-    expect(input).toHaveValue("Bitcoin");
+    await waitFor(() => {
+      const bitcoin = getByText("Bitcoin");
+      expect(bitcoin).toBeInTheDocument();
+    });
   });
 
   test("display error when user selects more than 9 coins", () => {
     const coins: Coin[] = [
-      { id: "coin1", symbol: "coin1", name: "Coin1" },
-      { id: "coin2", symbol: "coin2", name: "Coin2" },
-      { id: "coin3", symbol: "coin3", name: "Coin3" },
-      { id: "coin4", symbol: "coin4", name: "Coin4" },
-      { id: "coin5", symbol: "coin5", name: "Coin5" },
-      { id: "coin6", symbol: "coin6", name: "Coin6" },
-      { id: "coin7", symbol: "coin7", name: "Coin7" },
-      { id: "coin8", symbol: "coin8", name: "Coin8" },
-      { id: "coin9", symbol: "coin9", name: "Coin9" },
-      { id: "coin10", symbol: "coin10", name: "Coin10" },
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+      { id: "coin2", symbol: "coin2", name: "Coin2", colorChoice: 1 },
+      { id: "coin3", symbol: "coin3", name: "Coin3", colorChoice: 2 },
+      { id: "coin4", symbol: "coin4", name: "Coin4", colorChoice: 3 },
+      { id: "coin5", symbol: "coin5", name: "Coin5", colorChoice: 4 },
+      { id: "coin6", symbol: "coin6", name: "Coin6", colorChoice: 5 },
+      { id: "coin7", symbol: "coin7", name: "Coin7", colorChoice: 6 },
+      { id: "coin8", symbol: "coin8", name: "Coin8", colorChoice: 7 },
+      { id: "coin9", symbol: "coin9", name: "Coin9", colorChoice: 8 },
+      { id: "coin10", symbol: "coin10", name: "Coin10", colorChoice: null },
     ];
 
     const { getByTestId, getByRole } = render(
@@ -102,17 +108,16 @@ describe("SearchBar Component", () => {
 
   test("input text field is disabled when user has selected 9 coins", () => {
     const coins: Coin[] = [
-      { id: "coin1", symbol: "coin1", name: "Coin1" },
-      { id: "coin2", symbol: "coin2", name: "Coin2" },
-      { id: "coin3", symbol: "coin3", name: "Coin3" },
-      { id: "coin4", symbol: "coin4", name: "Coin4" },
-      { id: "coin5", symbol: "coin5", name: "Coin5" },
-      { id: "coin6", symbol: "coin6", name: "Coin6" },
-      { id: "coin7", symbol: "coin7", name: "Coin7" },
-      { id: "coin8", symbol: "coin8", name: "Coin8" },
-      { id: "coin9", symbol: "coin9", name: "Coin9" },
-      { id: "coin10", symbol: "coin10", name: "Coin10" },
-      { id: "coin11", symbol: "coin11", name: "Coin11" },
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+      { id: "coin2", symbol: "coin2", name: "Coin2", colorChoice: 1 },
+      { id: "coin3", symbol: "coin3", name: "Coin3", colorChoice: 2 },
+      { id: "coin4", symbol: "coin4", name: "Coin4", colorChoice: 3 },
+      { id: "coin5", symbol: "coin5", name: "Coin5", colorChoice: 4 },
+      { id: "coin6", symbol: "coin6", name: "Coin6", colorChoice: 5 },
+      { id: "coin7", symbol: "coin7", name: "Coin7", colorChoice: 6 },
+      { id: "coin8", symbol: "coin8", name: "Coin8", colorChoice: 7 },
+      { id: "coin9", symbol: "coin9", name: "Coin9", colorChoice: 8 },
+      { id: "coin10", symbol: "coin10", name: "Coin10", colorChoice: null },
     ];
 
     const { getByTestId } = render(
@@ -138,17 +143,16 @@ describe("SearchBar Component", () => {
 
   test("input text field is enabled when user removes a coin out of 10", async () => {
     const coins: Coin[] = [
-      { id: "coin1", symbol: "coin1", name: "Coin1" },
-      { id: "coin2", symbol: "coin2", name: "Coin2" },
-      { id: "coin3", symbol: "coin3", name: "Coin3" },
-      { id: "coin4", symbol: "coin4", name: "Coin4" },
-      { id: "coin5", symbol: "coin5", name: "Coin5" },
-      { id: "coin6", symbol: "coin6", name: "Coin6" },
-      { id: "coin7", symbol: "coin7", name: "Coin7" },
-      { id: "coin8", symbol: "coin8", name: "Coin8" },
-      { id: "coin9", symbol: "coin9", name: "Coin9" },
-      { id: "coin10", symbol: "coin10", name: "Coin10" },
-      { id: "coin11", symbol: "coin11", name: "Coin11" },
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+      { id: "coin2", symbol: "coin2", name: "Coin2", colorChoice: 1 },
+      { id: "coin3", symbol: "coin3", name: "Coin3", colorChoice: 2 },
+      { id: "coin4", symbol: "coin4", name: "Coin4", colorChoice: 3 },
+      { id: "coin5", symbol: "coin5", name: "Coin5", colorChoice: 4 },
+      { id: "coin6", symbol: "coin6", name: "Coin6", colorChoice: 5 },
+      { id: "coin7", symbol: "coin7", name: "Coin7", colorChoice: 6 },
+      { id: "coin8", symbol: "coin8", name: "Coin8", colorChoice: 7 },
+      { id: "coin9", symbol: "coin9", name: "Coin9", colorChoice: 8 },
+      { id: "coin10", symbol: "coin10", name: "Coin10", colorChoice: null },
     ];
 
     const { getByTestId, getByText } = render(
@@ -187,20 +191,19 @@ describe("SearchBar Component", () => {
 
   test("error message is removed when user unselects a coin", async () => {
     const coins: Coin[] = [
-      { id: "coin1", symbol: "coin1", name: "Coin1" },
-      { id: "coin2", symbol: "coin2", name: "Coin2" },
-      { id: "coin3", symbol: "coin3", name: "Coin3" },
-      { id: "coin4", symbol: "coin4", name: "Coin4" },
-      { id: "coin5", symbol: "coin5", name: "Coin5" },
-      { id: "coin6", symbol: "coin6", name: "Coin6" },
-      { id: "coin7", symbol: "coin7", name: "Coin7" },
-      { id: "coin8", symbol: "coin8", name: "Coin8" },
-      { id: "coin9", symbol: "coin9", name: "Coin9" },
-      { id: "coin10", symbol: "coin10", name: "Coin10" },
-      { id: "coin11", symbol: "coin11", name: "Coin11" },
+      { id: "coin1", symbol: "coin1", name: "Coin1", colorChoice: 0 },
+      { id: "coin2", symbol: "coin2", name: "Coin2", colorChoice: 1 },
+      { id: "coin3", symbol: "coin3", name: "Coin3", colorChoice: 2 },
+      { id: "coin4", symbol: "coin4", name: "Coin4", colorChoice: 3 },
+      { id: "coin5", symbol: "coin5", name: "Coin5", colorChoice: 4 },
+      { id: "coin6", symbol: "coin6", name: "Coin6", colorChoice: 5 },
+      { id: "coin7", symbol: "coin7", name: "Coin7", colorChoice: 6 },
+      { id: "coin8", symbol: "coin8", name: "Coin8", colorChoice: 7 },
+      { id: "coin9", symbol: "coin9", name: "Coin9", colorChoice: 8 },
+      { id: "coin10", symbol: "coin10", name: "Coin10", colorChoice: null },
     ];
 
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByText, getByRole } = render(
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <SearchBar coins={coins} />
@@ -222,14 +225,16 @@ describe("SearchBar Component", () => {
     }
 
     const coin1 = getByText("Coin1");
-    const errorMessage = getByText(
+    const helperText = getByText(
       "You can only select 9 coins. Please remove a coin to select another."
     );
 
     userEvent.click(coin1);
 
     await waitFor(() => {
-      expect(errorMessage).not.toBeInTheDocument();
+      expect(helperText).toHaveTextContent(
+        "Please select a coin from the drop down"
+      );
     });
   });
 });

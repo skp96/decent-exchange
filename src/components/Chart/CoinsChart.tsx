@@ -3,6 +3,9 @@ import { Line } from "react-chartjs-2";
 import { colors } from "../styles";
 import { labelFormatter } from "../../utils/label-formatter";
 import { WEEK1 } from "../../api/time-periods";
+import { useRecoilValue } from "recoil";
+import { selectedCoinsState } from "../../recoil/atoms";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +18,7 @@ import {
   ChartOptions,
   Tick,
 } from "chart.js";
+import { useEffect, useState } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -28,13 +32,26 @@ ChartJS.register(
 
 export const CoinsChart: React.FC<{
   coinChartData: CoinChartData;
-  colorChoice: number;
-}> = ({ coinChartData, colorChoice }) => {
+}> = ({ coinChartData }) => {
+  const selectedCoins = useRecoilValue(selectedCoinsState);
+
+  const findColor = () => {
+    const coin = coinChartData.id;
+    for (let i = 0; i < selectedCoins.length; i++) {
+      const selectedCoin = selectedCoins[i];
+
+      if (coin === selectedCoin.id && selectedCoin.colorChoice !== null) {
+        return colors[selectedCoin.colorChoice];
+      }
+    }
+    return "";
+  };
+
   const getDataset = () => {
     return {
       label: coinChartData.id as string,
       data: coinChartData.prices as number[],
-      backgroundColor: colors[colorChoice] as string,
+      backgroundColor: findColor(),
     };
   };
 

@@ -8,12 +8,13 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { selectedCoinsState } from "../../recoil/atoms";
-import { coinListState } from "../../recoil/atoms";
+import { coinListState, colorChoiceState } from "../../recoil/atoms";
 
 export const SearchBar: React.FC<{ coins: Coin[] }> = ({ coins }) => {
   const [coinsList, setCoinsListState] = useRecoilState(coinListState);
   const [selectedCoins, setSelectedCoins] = useRecoilState(selectedCoinsState);
   const [isError, setIsError] = useState(false);
+  const [colorChoices, setColorChoices] = useRecoilState(colorChoiceState);
 
   useEffect(() => {
     if (coins) {
@@ -29,15 +30,22 @@ export const SearchBar: React.FC<{ coins: Coin[] }> = ({ coins }) => {
 
   const updateSelectedCoins = (
     event: React.BaseSyntheticEvent,
-    value: Coin | string | null
+    value: Coin | null
   ) => {
     const maxCoins = 9;
-
     if (selectedCoins.length + 1 > maxCoins && (value as Coin)) {
       setIsError(true);
-    } else if (value as Coin) {
-      setSelectedCoins((selectedCoins) => [...selectedCoins, value as Coin]);
-      removeCoinFromList(value as Coin);
+    } else if ((value as Coin) && value !== null) {
+      let coin: Coin = {
+        id: null,
+        symbol: null,
+        name: null,
+        colorChoice: null,
+      };
+      coin = { ...value, colorChoice: colorChoices[0] };
+      setColorChoices([...colorChoices.slice(1, colorChoices.length)]);
+      setSelectedCoins((selectedCoins) => [...selectedCoins, coin as Coin]);
+      removeCoinFromList(coin as Coin);
     }
   };
 
@@ -54,11 +62,11 @@ export const SearchBar: React.FC<{ coins: Coin[] }> = ({ coins }) => {
 
   return (
     <Autocomplete
-      freeSolo={true}
       id="coin-search"
       data-testid="autocomplete-search"
       options={coinsList}
-      getOptionLabel={(option) => option.name as string}
+      getOptionLabel={(option) => (option.name ? option.name : "")}
+      value={null}
       onChange={updateSelectedCoins}
       disabled={isError}
       renderInput={(params) => (
@@ -68,7 +76,7 @@ export const SearchBar: React.FC<{ coins: Coin[] }> = ({ coins }) => {
           helperText={
             isError
               ? "You can only select 9 coins. Please remove a coin to select another."
-              : ""
+              : "Please select a coin from the drop down menu"
           }
           label={isError ? "Max Selected Coins Reached" : ""}
           placeholder="Search"
